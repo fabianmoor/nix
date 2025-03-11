@@ -19,7 +19,6 @@
           pkgs.alacritty
           pkgs.aerospace
           pkgs.mkalias
-          pkgs.nerd-fonts.iosevka-term
           pkgs.python3
           pkgs.discord
           pkgs.spotify
@@ -28,8 +27,13 @@
           pkgs.raycast
           pkgs.checkstyle
           pkgs.tmux
+          pkgs.zsh
           pkgs.oh-my-zsh
         ];
+
+      fonts.packages = with pkgs; [
+        nerd-fonts.iosevka-term
+      ];
 
         homebrew = {
           enable = true;
@@ -41,8 +45,6 @@
           ];
           onActivation.cleanup = "zap";
         };
-
-
 
 
       system.activationScripts.applications.text = let
@@ -79,6 +81,18 @@
 
       # Enable alternative shell support in nix-darwin.
       # programs.fish.enable = true;
+      # Enable alternative shell support in nix-darwin.
+      programs.zsh.enable = true;
+      programs.zsh.interactiveShellInit = ''
+      export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/
+
+      ZSH_THEME="agnoster"
+      plugins=(git)
+
+      source $ZSH/oh-my-zsh.sh
+      '';
+
+      programs.zsh.promptInit = ""; 
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
