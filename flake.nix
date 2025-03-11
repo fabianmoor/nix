@@ -38,10 +38,10 @@
         homebrew = {
           enable = true;
           casks = [
-	    "ghostty"
+            "ghostty"
             "steam"
-	    "firefox"
-	    "karabiner-elements"
+            "firefox"
+            "karabiner-elements"
           ];
           onActivation.cleanup = "zap";
         };
