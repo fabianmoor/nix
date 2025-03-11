@@ -16,8 +16,6 @@
       environment.systemPackages =
         [ pkgs.neovim
           pkgs.vim
-          pkgs.firefox
-          # pkgs.ghostty
           pkgs.alacritty
           pkgs.aerospace
           pkgs.mkalias
@@ -28,16 +26,23 @@
           pkgs.slack
           pkgs.lunarvim
           pkgs.raycast
+          pkgs.checkstyle
+          pkgs.tmux
+          pkgs.oh-my-zsh
         ];
 
         homebrew = {
           enable = true;
           casks = [
-            "ghostty"
+	    "ghostty"
             "steam"
+	    "firefox"
+	    "karabiner-elements"
           ];
           onActivation.cleanup = "zap";
         };
+
+
 
 
       system.activationScripts.applications.text = let
