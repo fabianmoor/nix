@@ -29,6 +29,10 @@
           pkgs.tmux
           pkgs.zsh
           pkgs.oh-my-zsh
+          pkgs.zsh-autocomplete
+          pkgs.gradle
+          pkgs.zsh-powerlevel10k
+          pkgs.zsh-syntax-highlighting
         ];
 
       fonts.packages = with pkgs; [
@@ -82,17 +86,28 @@
       # Enable alternative shell support in nix-darwin.
       # programs.fish.enable = true;
       # Enable alternative shell support in nix-darwin.
-      programs.zsh.enable = true;
+      # programs.zsh = {
+      #   oh-my-zsh = {
+      #     enable = true;
+      #     plugins = ["git" "zsh-autocomplete"];
+      #   };
+      # };
+
       programs.zsh.interactiveShellInit = ''
       export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/
 
-      ZSH_THEME="agnoster"
-      plugins=(git)
+      ZSH_THEME=""
+      plugins=(
+            git
+            )
 
       source $ZSH/oh-my-zsh.sh
+
+      # source ${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
       '';
 
-      programs.zsh.promptInit = ""; 
+      programs.zsh.promptInit = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"; 
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
