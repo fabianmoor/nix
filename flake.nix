@@ -33,6 +33,7 @@
           pkgs.gradle
           pkgs.zsh-powerlevel10k
           pkgs.zsh-syntax-highlighting
+          pkgs.cargo
         ];
 
       fonts.packages = with pkgs; [
