@@ -21,6 +21,7 @@
           pkgs.mkalias
           pkgs.python3
           pkgs.discord
+          # pkgs.vesktop
           pkgs.spotify
           pkgs.slack
           pkgs.lunarvim
@@ -34,6 +35,7 @@
           pkgs.zsh-powerlevel10k
           pkgs.zsh-syntax-highlighting
           pkgs.cargo
+          pkgs.jdk
         ];
 
       fonts.packages = with pkgs; [
@@ -48,8 +50,12 @@
             "firefox"
             "karabiner-elements"
           ];
+          taps = [
+            "homebrew/bundle"
+          ];
           onActivation.cleanup = "zap";
         };
+
 
 
       system.activationScripts.applications.text = let
