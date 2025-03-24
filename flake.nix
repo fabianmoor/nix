@@ -44,6 +44,9 @@
 
         homebrew = {
           enable = true;
+          brews = [
+            "mas"
+          ];
           casks = [
             "ghostty"
             "steam"
@@ -53,6 +56,9 @@
           taps = [
             "homebrew/bundle"
           ];
+          masApps = {
+            "mappaMini" = 6739544806;
+          };
           onActivation.cleanup = "zap";
         };
 
