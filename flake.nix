@@ -22,6 +22,7 @@
           pkgs.python3
           pkgs.discord
           # pkgs.vesktop
+          # pkgs.webcord-vencord
           pkgs.spotify
           pkgs.slack
           pkgs.lunarvim
@@ -35,7 +36,11 @@
           pkgs.zsh-powerlevel10k
           pkgs.zsh-syntax-highlighting
           pkgs.cargo
-          pkgs.jdk
+          pkgs.plantuml-c4
+          pkgs.nodejs_23
+          pkgs.wget
+          pkgs.maven
+          pkgs.zulu23
         ];
 
       fonts.packages = with pkgs; [
@@ -46,6 +51,9 @@
           enable = true;
           brews = [
             "mas"
+            "lua-language-server"
+            "pyright"
+            "jdtls"
           ];
           casks = [
             "ghostty"
@@ -96,6 +104,12 @@
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
 
+      # Enable Linux Binaries
+      nix.linux-builder.enable = true;
+
+      # Enable touchId for auth
+      security.pam.services.sudo_local.touchIdAuth = true;
+
       # Enable alternative shell support in nix-darwin.
       # programs.fish.enable = true;
       # Enable alternative shell support in nix-darwin.
@@ -131,6 +145,9 @@
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
+
+      # Unable to install unsupported apps. // For instance Linux Binaries
+      nixpkgs.config.allowUnsupportedSystem = true;
     };
   in
   {
