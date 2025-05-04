@@ -28,6 +28,7 @@
           pkgs.lunarvim
           pkgs.raycast
           pkgs.checkstyle
+          pkgs.google-java-format
           pkgs.tmux
           pkgs.zsh
           pkgs.oh-my-zsh
@@ -41,6 +42,8 @@
           pkgs.wget
           pkgs.maven
           pkgs.zulu23
+          pkgs.yabai
+          pkgs.skhd
         ];
 
       fonts.packages = with pkgs; [
@@ -54,12 +57,16 @@
             "lua-language-server"
             "pyright"
             "jdtls"
+            "ltex-ls"
+            "cliclick"
+            "mysql-client"
           ];
           casks = [
             "ghostty"
             "steam"
             "firefox"
             "karabiner-elements"
+            "alt-tab"
           ];
           taps = [
             "homebrew/bundle"
