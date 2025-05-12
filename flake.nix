@@ -14,15 +14,12 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
-        [ pkgs.neovim
-          pkgs.vim
+        [ pkgs.vim
           pkgs.alacritty
           pkgs.aerospace
           pkgs.mkalias
           pkgs.python3
           pkgs.discord
-          # pkgs.vesktop
-          # pkgs.webcord-vencord
           pkgs.spotify
           pkgs.slack
           pkgs.lunarvim
@@ -44,15 +41,27 @@
           pkgs.zulu23
           pkgs.yabai
           pkgs.skhd
+          pkgs.sketchybar
+          pkgs.hackgen-nf-font
+          pkgs.neofetch
+          pkgs.mysql84
+          pkgs.lazygit
+          pkgs.fzf
+          pkgs.ripgrep
+          pkgs.java-language-server
+          pkgs.vimPlugins.nvim-jdtls
+          pkgs.iterm2
         ];
 
       fonts.packages = with pkgs; [
         nerd-fonts.iosevka-term
+        nerd-fonts.jetbrains-mono
       ];
 
         homebrew = {
           enable = true;
           brews = [
+            "neovim"
             "mas"
             "lua-language-server"
             "pyright"
@@ -60,6 +69,8 @@
             "ltex-ls"
             "cliclick"
             "mysql-client"
+            "chafa"
+            "ffmpeg"
           ];
           casks = [
             "ghostty"
