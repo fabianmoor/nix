@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo darwin-rebuild switch --flake ~/nix#fabbemmbp
+sudo yabai --load-sa

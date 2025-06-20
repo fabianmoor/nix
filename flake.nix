@@ -6,11 +6,19 @@
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    # Add home-manager as an input
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs"; # Ensure home-manager uses the same nixpkgs
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager}:
   let
+    username = "fabbemmbp"; # Define username once
     configuration = { pkgs, config, ... }: {
+    users.users.${username} = {
+        name = username;
+        home = "/Users/${username}";
+      };
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
@@ -35,7 +43,6 @@
           pkgs.zsh-syntax-highlighting
           pkgs.cargo
           pkgs.plantuml-c4
-          pkgs.nodejs_23
           pkgs.wget
           pkgs.maven
           pkgs.zulu23
@@ -78,6 +85,9 @@
             "firefox"
             "karabiner-elements"
             "alt-tab"
+            "linearmouse"
+            "transmission"
+            "rar"
           ];
           taps = [
             "homebrew/bundle"
@@ -87,7 +97,6 @@
           };
           onActivation.cleanup = "zap";
         };
-
 
 
       system.activationScripts.applications.text = let
@@ -109,8 +118,28 @@
           ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
         done
             '';
+      # This is still okay for system-wide defaults, not for specific app entries
       system.defaults = {
         dock.autohide = true;
+        # Ensure these paths are correct and accessible to the user
+        dock.persistent-apps = [
+          "/nix/store/8xk9w9zpjydxzr31hvabr0f59pnj18xj-slack-4.42.120/Applications/Slack.app"
+          "/System/Applications/Messages.app"
+        ];
+      };
+
+      system.activationScripts.clearDock = {
+        text = ''
+          echo "Clearing existing persistent dock items..." >&2
+          defaults delete com.apple.dock persistent-apps
+          defaults delete com.apple.dock persistent-others
+          killall Dock # Restart Dock to apply changes immediately
+        '';
+        # Make sure it runs early in the activation process
+        # The higher the priority number, the earlier it runs.
+        # Darwin-rebuild's own scripts run at 20.
+        # This will run before nix-darwin sets system.defaults.
+        priority = 10;
       };
 
       # Allow for broken packages
@@ -128,16 +157,6 @@
       # Enable touchId for auth
       security.pam.services.sudo_local.touchIdAuth = true;
 
-      # Enable alternative shell support in nix-darwin.
-      # programs.fish.enable = true;
-      # Enable alternative shell support in nix-darwin.
-      # programs.zsh = {
-      #   oh-my-zsh = {
-      #     enable = true;
-      #     plugins = ["git" "zsh-autocomplete"];
-      #   };
-      # };
-
       programs.zsh.interactiveShellInit = ''
       export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/
 
@@ -148,11 +167,10 @@
 
       source $ZSH/oh-my-zsh.sh
 
-      # source ${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
       source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
       '';
 
-      programs.zsh.promptInit = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"; 
+      programs.zsh.promptInit = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
@@ -160,6 +178,8 @@
       # Used for backwards compatibility, please read the changelog before changing.
       # $ darwin-rebuild changelog
       system.stateVersion = 6;
+
+      system.primaryUser = username; # Use the defined username
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
@@ -169,20 +189,29 @@
     };
   in
   {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
     darwinConfigurations."fabbemmbp" = nix-darwin.lib.darwinSystem {
-      modules = [ 
+      modules = [
         configuration
+        # home-manager.darwinModules.home-manager # Include home-manager darwin module
         nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
             enable = true;
             enableRosetta = true;
-            user = "fabianmoorpucar";
+            user = username; # Use the defined username
             autoMigrate = true;
           };
         }
+        # Pass the home-manager configuration for the user
+        # {
+        #   home-manager.users.${username} = {
+        #     home.stateVersion = "23.11"; # Set your home-manager state version
+        #     imports = [
+        #       # Import your home-manager.nix here
+        #       # ./modules/home-manager.nix
+        #     ];
+        #   };
+        # }
       ];
     };
   };
